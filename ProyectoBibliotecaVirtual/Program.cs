@@ -40,7 +40,7 @@ while (true)
     {
         case "1":
             Console.Clear();
-            //crearCuenta();
+            crearCuenta();
             break;
         case "2":
             Console.Clear();
@@ -63,6 +63,64 @@ while (true)
             Console.Clear();
             break;
     }
+
+}
+
+void crearCuenta()
+{
+    // Aquí se implementa la lógica para crear una cuenta de usuario
+    Console.Clear();
+    Console.ForegroundColor = ConsoleColor.Cyan;
+    Console.WriteLine("**************INGRESE UN NUEVO USUARIO***************");
+    Console.WriteLine();
+
+    // Solicitar al usuario que ingrese sus datos
+    Console.Write("Ingrese sus nombres: "); // para nombres
+    string nombres = Console.ReadLine();
+    Console.WriteLine();
+
+    Console.Write("Ingrese sus apellidos: ");
+    string apellidos = Console.ReadLine(); // para apellidos
+    Console.WriteLine();
+
+    Console.Write("Ingrese su fecha de nacimiento (Use el formato DD/MM/AA): ");
+    DateTime fechaNacimiento = Convert.ToDateTime(Console.ReadLine()); // para fecha de nacimiento
+    Console.WriteLine();
+
+    Console.Write("Ingrese su nombre de usuario: ");
+    string nombreUsuario = Console.ReadLine(); // para nombre de usuario
+    Console.WriteLine();
+
+    Console.Write("Ingrese su correo electrónico: ");
+    string correo = Console.ReadLine(); // para correo
+    Console.WriteLine();
+
+    Console.Write("Ingrese su contraseña: ");
+    string contraseña = ContraseñaOculta(); // para contraseña
+    Console.WriteLine();
+
+    Console.Write("Confirme su contraseña: ");
+    string confirmacionContraseña = ContraseñaOculta(); // para confirmar contraseña
+    Console.WriteLine();
+
+    if (contraseña != confirmacionContraseña) // esto valida que la contraseña y su confirmación sean iguales
+    {
+        Console.WriteLine("Las contraseñas no coinciden. Intente de nuevo.");
+        Console.ReadLine();
+        Console.Clear();
+        crearCuenta(); // vuelve a llamar al método para crear cuenta si las contraseñas no coinciden
+        return;
+    }
+
+    Console.Write("Cuenta Creada con éxito! Presione Enter para continuar..."); // El mensaje que se mostrará cuando el registro se complete correctamente.
+    //Usuario ObjUsuario = new Usuario(nombres, apellidos, fechaNacimiento);
+    SesionUsuario objSesionUsuario = new SesionUsuario(nombres, apellidos, fechaNacimiento, nombreUsuario, correo, contraseña);
+    //Mail.EnviarCorreoBienvenida(correo, nombres);  // Pendiente
+    DB.Usuarios.Add(objSesionUsuario);
+    DB.SesionesUsuarios.Add(objSesionUsuario);
+    DB.SaveChanges();
+    Console.ReadLine();
+    Console.Clear();
 
 }
 
@@ -100,10 +158,10 @@ void IniciarSesionAdmin()
     Console.Clear();
     Console.ForegroundColor = ConsoleColor.DarkYellow;
     Console.Write("Usuario ADMIN: ");
-    string AdminUsuario = Console.ReadLine();
+    string adminUsuario = Console.ReadLine();
 
     var db = new BSD();
-    var UserAdmin = db.Admins.FirstOrDefault(a => a.adminUsuario == AdminUsuario); // !!!NUEVO¡¡¡ // Esta es la línea de verificación modificada para asegurar que el nombre exista en nuestra Base de Datos en SQL
+    var UserAdmin = db.Admins.FirstOrDefault(a => a.AdminUsuario == adminUsuario); // !!!NUEVO¡¡¡ // Esta es la línea de verificación modificada para asegurar que el nombre exista en nuestra Base de Datos en SQL
     
     if (UserAdmin == null)  // esto es la condicional, si el usuario no existe en la base de datos ADMINISTRADOR, mostrará el mensaje de credencial no registrada, caso contrario, pedirá la clave.
     {
@@ -114,11 +172,11 @@ void IniciarSesionAdmin()
     else
     {
         Console.Clear();
-        Console.WriteLine("Usuario encontrado: " + UserAdmin.adminUsuario); // !!!NUEVO¡¡¡ // Al estar modificada la linea de verificacion de usuario en BSD, tambien se modifica la manera en que imprimimos el usuario con el que queremos logear
+        Console.WriteLine("Usuario encontrado: " + UserAdmin.AdminUsuario); // !!!NUEVO¡¡¡ // Al estar modificada la linea de verificacion de usuario en BSD, tambien se modifica la manera en que imprimimos el usuario con el que queremos logear
         Console.Write("Ingrese su contraseña: ");
         string contraseña = ContraseñaOculta();
 
-        if (UserAdmin.adminContraseña == contraseña)
+        if (UserAdmin.AdminContraseña == contraseña)
         {
             while (true)
             {
@@ -128,7 +186,7 @@ void IniciarSesionAdmin()
                 Console.WriteLine("╔════════════════════════════════════════════╗");
                 Console.WriteLine("║             Modo Administrador             ║");  // MENU DE ADMINISTRADOR
                 Console.WriteLine("╚════════════════════════════════════════════╝");
-                Console.WriteLine($"\t     ADMIN: {UserAdmin.adminUsuario}");
+                Console.WriteLine($"\t     ADMIN: {UserAdmin.AdminUsuario}");
                 UserAdmin.ImprimirADMIN();
                 Console.WriteLine();
                 Console.WriteLine("╔════════════════════════════════════════════╗╔════════════════════════════════════════════╗");

@@ -11,33 +11,42 @@ namespace ProyectoBibliotecaVirtual.Models
     [Table("ADMINISTRADORES")]
     public class Administradores
     {
+        private int id;
+        private string adminUsuario;
+        private string tag;
+        private string adminUserId;
+        private DateTime fechaNacimiento;
+        private DateTime fechaRegistro;
+        private int edad;
+        private string adminContraseña;
         public Administradores(string adminUsuario, DateTime fechaNacimiento, string adminContraseña)
         {            
-            this.adminUsuario = adminUsuario;
-            this.adminUserId = adminUsuario + tag;
+            this.AdminUsuario = adminUsuario;
+            this.AdminUserId = adminUsuario + Tag;
             this.FechaNacimiento = fechaNacimiento;
-            this.edad = DateTime.Now.Year - fechaNacimiento.Year;
-            this.adminContraseña = adminContraseña;
+            this.Edad = DateTime.Now.Year - fechaNacimiento.Year;
+            this.AdminContraseña = adminContraseña;
         }
 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int id {  get; set; }
+        [Column("ID")]
+        public int Id {  get; set; }
 
         [Required]
         [MaxLength(100)]
         [Column("USER_ADMIN")]
-        public string adminUsuario { get; set; }
+        public string AdminUsuario { get; set; }
 
         [Required]
         [MaxLength(100)]
         [Column("ADMIN_TAG")]
-        public string tag { get; set; } = " #0010";
+        public string Tag { get; set; } = " #0010";
 
         [Required]
         [MaxLength(100)]
         [Column("ADMIN_ID")]
-        public string adminUserId { get; set; }
+        public string AdminUserId { get; set; }
 
         [Required]
         [Column("FECHA_NACIMIENTO")]
@@ -45,24 +54,24 @@ namespace ProyectoBibliotecaVirtual.Models
 
         [Required]
         [Column("FECHA_REGISTRO")]
-        public DateTime fechaRegistro { get; set; } = DateTime.Now;
+        public DateTime FechaRegistro { get; set; } = DateTime.Now;
 
         [Required]
-        [MaxLength(100)]
+        [MaxLength(10)]
         [Column("ADMIN_EDAD")]
-        public int edad {  get; set; }
+        public int Edad {  get; set; }
 
         [Required]
         [Column("CLAVE_ADMIN")]
-        public string adminContraseña { get; set; }
+        public string AdminContraseña { get; set; }
 
         public void ImprimirADMIN()
         {
             Console.WriteLine("══════════════════════════════════════════════");
             Console.WriteLine(" DATOS DE ADMINISTRADOR:");
-            Console.WriteLine(" ID: " + this.id);
-            Console.WriteLine(" ADMIN: " + this.adminUserId);
-            Console.WriteLine(" Edad: " + this.edad);
+            Console.WriteLine($" ID: {Id}");
+            Console.WriteLine($" ADMIN: {AdminUserId}");
+            Console.WriteLine($" Edad: {Edad}");
         }
     }
 }
