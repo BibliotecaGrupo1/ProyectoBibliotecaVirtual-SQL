@@ -44,7 +44,7 @@ while (true)
             break;
         case "2":
             Console.Clear();
-            //iniciarSesion();
+            iniciarSesion();
             break;
         case "3":
             Console.WriteLine("Saliendo del sistema...");
@@ -66,12 +66,15 @@ while (true)
 
 }
 
+/////////////// REGISTRO DE USUARIOS ///////////////
 void crearCuenta()
 {
     // Aquí se implementa la lógica para crear una cuenta de usuario
     Console.Clear();
     Console.ForegroundColor = ConsoleColor.Cyan;
-    Console.WriteLine("**************INGRESE UN NUEVO USUARIO***************");
+    Console.WriteLine("╔════════════════════════════════════════════╗");
+    Console.WriteLine("║           REGISTRAR NUEVO USUARIO          ║");
+    Console.WriteLine("╚════════════════════════════════════════════╝");
     Console.WriteLine();
 
     // Solicitar al usuario que ingrese sus datos
@@ -113,15 +116,97 @@ void crearCuenta()
     }
 
     Console.Write("Cuenta Creada con éxito! Presione Enter para continuar..."); // El mensaje que se mostrará cuando el registro se complete correctamente.
-    //Usuario ObjUsuario = new Usuario(nombres, apellidos, fechaNacimiento);
-    SesionUsuario objSesionUsuario = new SesionUsuario(nombres, apellidos, fechaNacimiento, nombreUsuario, correo, contraseña);
+    SesionUsuario objRegistro = new SesionUsuario(nombres, apellidos, fechaNacimiento, nombreUsuario, correo, contraseña);
     //Mail.EnviarCorreoBienvenida(correo, nombres);  // Pendiente
-    DB.Usuarios.Add(objSesionUsuario);
-    DB.SesionesUsuarios.Add(objSesionUsuario);
-    DB.SaveChanges();
+    DB.SesionesUsuarios.Add(objRegistro); 
+    DB.SaveChanges(); // !!!NUEVO¡¡¡ // Esta linea ejecuta el código de guardado de datos en la BDS de las sesiones del usuario, clasifica los datos segun su respectiva tabla
     Console.ReadLine();
     Console.Clear();
+}
 
+/////////////// INICIO DE SESIÓN DE USUARIOS ///////////////
+void iniciarSesion()
+{
+    Console.Clear();
+    Console.WriteLine("╔════════════════════════════════════════════╗");
+    Console.WriteLine("║                INICIAR SESION              ║");
+    Console.WriteLine("╚════════════════════════════════════════════╝");
+    Console.WriteLine();
+    Console.Write("Ingrese su nombre de usuario: "); // aquí pedimos ingresar las credenciales como nombre de usuario
+
+    string credencial = Console.ReadLine();
+
+    var db = new BSD();
+    var User = db.SesionesUsuarios.FirstOrDefault(a => a.NombreUsuario == credencial); // !!!NUEVO¡¡¡ // Esta es la línea de verificación modificada para asegurar que el nombre exista en nuestra Base de Datos en SQL
+
+    if (User == null)  // esto es la condicional, si el usuario no existe en la base de datos Usuario, mostrará el mensaje de credencial no registrada, caso contrario, pedirá la clave.
+    {
+        Console.Clear();
+        Console.WriteLine("╔════════════════════════════════════════════╗");
+        Console.WriteLine("║                INICIAR SESION              ║");
+        Console.WriteLine("╚════════════════════════════════════════════╝");
+        Console.WriteLine();
+        Console.WriteLine("Usuario no registrado.");
+        Console.ReadLine();
+        Console.Clear();
+    }
+    else
+    {
+        Console.Clear();
+        Console.WriteLine("╔════════════════════════════════════════════╗");
+        Console.WriteLine("║                INICIAR SESION              ║");
+        Console.WriteLine("╚════════════════════════════════════════════╝");
+        Console.WriteLine();
+        Console.WriteLine("Usuario encontrado: " + User.NombreUsuario); // !!!NUEVO¡¡¡ // Al estar modificada la linea de verificacion de usuario en BSD, tambien se modifica la manera en que imprimimos el usuario con el que queremos logear
+        Console.Write("Ingrese su contraseña: ");
+        string contraseña = ContraseñaOculta();
+
+        if (User.Contraseña == contraseña)
+        {
+            while (true)
+            {
+                Console.Clear();
+                Console.ForegroundColor = ConsoleColor.DarkCyan;
+                Console.WriteLine("╔════════════════════════════════════════════╗");
+                Console.WriteLine("║        PLATAFORMA BIBLIOTECA VIRTUAL       ║");
+                Console.WriteLine("╚════════════════════════════════════════════╝");
+                Console.WriteLine($"\t      Bienvenido {User.NombreUsuario}"); // una vez dentro la consola mostrará el nombre de usuario que se usó para el inicio de sesion, mostrando su nombre de usuario y las opciones del menu
+                User.ImprimirSesionUsuario();
+                Console.WriteLine("══════════════════════════════════════════════");
+                Console.ForegroundColor = ConsoleColor.DarkGreen;
+                Console.WriteLine("╔════════════════════════════════════════════╗");
+                Console.WriteLine("║                MENU DE USUARIO             ║");
+                Console.WriteLine("╚════════════════════════════════════════════╝");
+                Console.WriteLine(" 1. Agregar libro a mi lista");
+                Console.WriteLine(" 3. Listar todos mis libros");
+                Console.WriteLine(" 4. Cerrar Sesión");
+                Console.WriteLine();
+                Console.Write(" Seleccione una opción: ");
+
+                string opcionUsuario = Console.ReadLine();
+                switch (opcionUsuario)
+                {
+                    case "1":
+                        BuscarLibroEnOpenLibrary().GetAwaiter().GetResult();
+                        break;
+                    case "4": // aqui se implemente la misma logica de bucle para permanecer dentro del menu de usuario hasta que la opcion sea cerrar la sesion
+                        Console.Clear();
+                        Console.WriteLine("Volviendo al Menu Principal.");
+                        Console.WriteLine("Presiona ENTER para continuar...");
+                        Console.ReadLine();
+                        Console.Clear();
+                        return;
+                }
+            }
+        }
+        else
+        {
+            Console.WriteLine("Contraseña incorrecta, serás redirigido al menú.");
+            Console.ReadLine();
+            Console.Clear();
+            return;
+        }
+    }
 }
 
 /////////////// REGISTRO DE ADMINISTRADORES ///////////////
@@ -227,17 +312,17 @@ void IniciarSesionAdmin()
                         break;
                     case "5":
                         Console.Clear();
-                        //ListaUsuarios(); // Lista de Usuarios
+                        ListaUsuarios(); // Lista de Usuarios
                         Console.Clear();
                         break;
                     case "6":
                         Console.Clear();
-                        //ModificarUsuarioComoAdmin(); // Modificar Usuarios
+                        ModificarUsuarioComoAdmin(); // Modificar Usuarios
                         Console.Clear();
                         break;
                     case "7":
                         Console.Clear();
-                        //EliminarUsuario(); // Eliminar Usuarios
+                        EliminarUsuario(); // Eliminar Usuarios
                         Console.Clear();
                         break;
                     case "8":
@@ -257,6 +342,123 @@ void IniciarSesionAdmin()
             Console.Clear();
         }
     }
+}
+
+
+/////////////// LISTA DE USUARIOS PARA ADMINISTRADOR ///////////////
+void ListaUsuarios()
+{
+    Console.Clear();
+    Console.WriteLine("╔════════════════════════════════════════════╗");
+    Console.WriteLine("║     LISTA DE USUARIOS EN LA BIBLIOTECA     ║"); // Esto imprime la lista completa de todos los libros en la biblioteca
+    Console.WriteLine("╚════════════════════════════════════════════╝");
+
+    var db = new BSD();
+    var Users = db.SesionesUsuarios.ToList();
+    foreach (var Usuarios in Users)
+    {
+        Usuarios.ImprimirSesionUsuarioParaAdministrador();
+    }
+    Console.ReadLine();
+}
+
+/////////////// MODIFICAR USUARIOS ///////////////
+void ModificarUsuarioComoAdmin()
+{
+    Console.Clear();
+    Console.WriteLine("╔════════════════════════════════════════════╗");
+    Console.WriteLine("║    MODIFICAR USUARIOS DE LA BIBLIOTECA     ║"); // Esto imprime los libros y proporciona las opciones correspondientes para modificar el libro en cuestión
+    Console.WriteLine("╚════════════════════════════════════════════╝");
+    Console.WriteLine();
+
+    var db = new BSD();
+    var Users = db.SesionesUsuarios.ToList();
+    foreach (var Usuarios in Users)
+    {
+        Usuarios.ImprimirSesionUsuarioParaAdministrador();
+    }
+    Console.WriteLine("══════════════════════════════════════════════");
+    Console.WriteLine();
+    Console.Write("Escriba la ID del Usuario que va a modificar: ");
+    int UserID = Convert.ToInt32(Console.ReadLine());
+
+    var ModificarUser = db.SesionesUsuarios.FirstOrDefault(b => b.Id == UserID);
+    if (ModificarUser != null)
+    {
+        Console.Clear();
+        Console.WriteLine("╔════════════════════════════════════════════╗");
+        Console.WriteLine("║          MODIFICAR DATOS DE USUARIO        ║"); // Esto imprime los libros y proporciona las opciones correspondientes para modificar el libro en cuestión
+        Console.WriteLine("╚════════════════════════════════════════════╝");
+        ModificarUser.ImprimirSesionUsuarioParaAdministrador();
+        Console.WriteLine("══════════════════════════════════════════════");
+        Console.Write("Seleccione el dato que se va a modificar: ");
+        int OpcionMod = Convert.ToInt32(Console.ReadLine());
+
+        Console.ReadLine();
+    }
+}
+
+///////////////////////// ELIMINAR USUARIOS /////////////////////////
+void EliminarUsuario()
+{
+    Console.Clear();
+    Console.WriteLine("╔════════════════════════════════════════════╗");
+    Console.WriteLine("║     ELIMINAR USUARIOS DE LA BIBLIOTECA     ║"); // Esto imprime los libros y proporciona las opciones correspondientes para modificar el libro en cuestión
+    Console.WriteLine("╚════════════════════════════════════════════╝");
+    Console.WriteLine();
+
+    var db = new BSD();
+    var Users = db.SesionesUsuarios.ToList();
+    foreach (var Usuarios in Users)
+    {
+        Usuarios.ImprimirSesionUsuarioParaAdministrador();
+    }
+    Console.WriteLine("══════════════════════════════════════════════");
+    Console.WriteLine();
+    Console.Write("Escriba la ID del Usuario que va a eliminar: ");
+    int UserID = Convert.ToInt32(Console.ReadLine());
+
+    var EliminarUser = db.SesionesUsuarios.FirstOrDefault(b => b.Id == UserID);
+    if (EliminarUser != null)
+    {
+        Console.Clear();
+        Console.WriteLine("Usuario seleccionado: ");
+        EliminarUser.ImprimirSesionUsuario();
+        Console.WriteLine("══════════════════════════════════════════════");
+        Console.WriteLine();
+        Console.WriteLine("¿Está seguro que desea eliminar este Usuario? (S/N)");
+        string confirmacion = Console.ReadLine();
+
+        if (confirmacion?.ToUpper() == "S")
+        {
+            db.SesionesUsuarios.Remove(EliminarUser);
+            db.Usuarios.Remove(EliminarUser);
+
+            
+
+            db.SaveChanges();
+            Console.WriteLine("Usuario eliminado correctamente.");
+            Console.ReadLine();
+            Console.Clear();
+        }
+        else
+        {
+            Console.Clear();
+            Console.WriteLine("Operación cancelada.");
+            Console.WriteLine("Volviendo al menu ADMINISTRADOR...");
+            Console.ReadLine();
+            Console.Clear();
+        }
+    }
+    else
+    {
+        Console.Clear();
+        Console.WriteLine("No se encontró al Usuario.");
+        Console.WriteLine("Volviendo al menu ADMINISTRADOR...");
+        Console.ReadLine();
+        Console.Clear();
+    }
+
 }
 
 /////////////// CÓDIGO PARA OCULTAR/HASHTEAR LA CONTRASEÑA ///////////////
@@ -281,4 +483,61 @@ static string ContraseñaOculta() // Esta funcion permite realizar la creación 
     while (key.Key != ConsoleKey.Enter); // Mientras la tecla presionada no sea ENTER el campo seguirá recibiendo cada caracter como parte de la contraseña, exceptuando las teclas de comando
     Console.WriteLine();
     return contraseña;
+}
+
+/////////////////// AQUI EMPIEZA LA FUNCIÓN PARA BUSCAR LIBROS EN OPENLIBRARY Y GUARDARLOS EN LA BASE DE DATOS LOCAL///////////////////
+static async Task BuscarLibroEnOpenLibrary() // Esta función permite buscar libros en la API de OpenLibrary y guardar los seleccionados en la base de datos local
+{
+    Console.Clear();
+    Console.ForegroundColor = ConsoleColor.Green;
+    Console.WriteLine("***** BÚSQUEDA DE LIBROS EN OPENLIBRARY *****"); // Título del módulo
+    Console.Write("Ingrese el título del libro a buscar: ");
+    string titulo = Console.ReadLine(); // Lee el título del libro ingresado por el usuario
+
+    var apiService = new ApiService(); // Crea una instancia del servicio API
+    var libros = await apiService.BuscarLibrosPorTituloAsync(titulo); // Llama al método asíncrono para buscar libros por título
+
+    if (libros.Count == 0) // Verifica si se encontraron libros
+    {
+        Console.WriteLine("No se encontraron libros con ese título."); // Mensaje si no se encuentran libros
+    }
+    else
+    {
+        Console.WriteLine("\nResultados encontrados:"); // Muestra los resultados encontrados
+        int i = 1; // Contador para numerar los libros
+        foreach (var libro in libros.Take(10)) // Muestra solo los primeros 10 resultados (puede ser ajustable)
+        {
+            Console.WriteLine($"{i++}. {libro.Titulo} - {libro.Autor} ({libro.Año?.ToString() ?? "Año desconocido"})"); // Imprime el título, autor y año del libro
+        }
+
+        Console.Write("\n¿Desea guardar alguno de estos libros en la base de datos? (s/n): "); // Pregunta si el usuario desea guardar un libro
+        var respuesta = Console.ReadLine(); // Lee la respuesta del usuario
+        if (respuesta?.ToUpper() == "S") // Si la respuesta es "s" (sí), procede a guardar el libro
+        {
+            Console.Write("Ingrese el número del libro a guardar (1-10): "); // Solicita el número del libro a guardar
+            if (int.TryParse(Console.ReadLine(), out int seleccion) && seleccion >= 1 && seleccion <= libros.Take(10).Count()) // Valida la selección del usuario
+            {
+                var libroSeleccionado = libros[seleccion - 1]; // Obtiene el libro seleccionado basado en la entrada del usuario
+                var nuevoLibro = new ProyectoBibliotecaVirtual.Models.Libro // Crea una nueva instancia del modelo Libro para guardar en la base de datos
+                {
+                    Titulo = libroSeleccionado.Titulo,
+                    Autor = libroSeleccionado.Autor,
+                    Año = libroSeleccionado.Año
+                };
+
+                var DB = new ProyectoBibliotecaVirtual.Context.BSD(); // Crea una nueva instancia del contexto de la base de datos
+                DB.Libros.Add(nuevoLibro); // Agrega el nuevo libro al contexto
+                DB.SaveChanges(); // Guarda los cambios en la base de datos
+
+                Console.WriteLine("¡Libro guardado exitosamente en la base de datos!");
+            }
+            else
+            {
+                Console.WriteLine("Selección inválida. No se guardó ningún libro."); // Mensaje si la selección es inválida
+            }
+        }
+    }
+    Console.WriteLine("\nPresione Enter para continuar...");
+    Console.ReadLine();
+    Console.Clear();
 }

@@ -23,7 +23,7 @@ namespace ProyectoBibliotecaVirtual.Models
         {
             this.Nombres = nombres;
             this.Apellidos = apellidos;
-            this.NombreCompleto = nombres + apellidos;
+            this.NombreCompleto = nombres + " " + apellidos;
             this.FechaNacimiento = fechaNacimiento;
             this.Edad = DateTime.Now.Year - fechaNacimiento.Year;
         }
@@ -59,6 +59,8 @@ namespace ProyectoBibliotecaVirtual.Models
 
         public void ImprimirUsuario() // esto devuelve la información del usuario consultado
         {
+            Console.WriteLine("══════════════════════════════════════════════");
+            Console.WriteLine(" DATOS PERSONALES DEL USUARIO:");
             Console.WriteLine($" ID: {Id}");
             Console.WriteLine($" Nombre Completo: {NombreCompleto}");
             Console.WriteLine($" Edad: {Edad}");
@@ -66,6 +68,8 @@ namespace ProyectoBibliotecaVirtual.Models
 
         public void ImprimirUsuarioParaAdministrador() // esto devuelve la información del usuario consultado, mostrando la lista completa para los administradores
         {
+            Console.WriteLine("══════════════════════════════════════════════");
+            Console.WriteLine(" DATOS PERSONALES DEL USUARIO:");
             Console.WriteLine($" ID: {Id}");
             Console.WriteLine($" Nombres: {Nombres}");
             Console.WriteLine($" Apellidos: {Apellidos}");

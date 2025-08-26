@@ -45,9 +45,9 @@ namespace ProyectoBibliotecaVirtual.Models
             ImprimirUsuario();
             Console.WriteLine("..............................................");
             Console.WriteLine(" DATOS DEL PERFIL DEL USUARIO: ");
-            Console.WriteLine($"Fecha de registro: {FechaRegistro}");
-            Console.WriteLine($"Nombre de Usuario: {NombreUsuario}");
-            Console.WriteLine($"E-Mail: {Correo}");
+            Console.WriteLine($" Fecha de registro: {FechaRegistro}");
+            Console.WriteLine($" Nombre de Usuario: {NombreUsuario}");
+            Console.WriteLine($" E-Mail: {Correo}");
         }
 
         public void ImprimirSesionUsuarioParaAdministrador()
@@ -55,10 +55,10 @@ namespace ProyectoBibliotecaVirtual.Models
             ImprimirUsuarioParaAdministrador();
             Console.WriteLine("..............................................");
             Console.WriteLine(" DATOS DEL PERFIL DEL USUARIO: ");
-            Console.WriteLine($"Fecha de registro: {FechaRegistro}");
-            Console.WriteLine($"Nombre de Usuario: {NombreUsuario}");
-            Console.WriteLine($"E-Mail: {Correo}");
-            Console.WriteLine($"Contraseña: {Contraseña}");
+            Console.WriteLine($" Fecha de registro: {FechaRegistro}");
+            Console.WriteLine($" Nombre de Usuario: {NombreUsuario}");
+            Console.WriteLine($" E-Mail: {Correo}");
+            Console.WriteLine($" Contraseña: {Contraseña}");
 
         }
     }

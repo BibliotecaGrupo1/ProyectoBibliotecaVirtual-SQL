@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ProyectoBibliotecaVirtual.Context;
 
@@ -11,9 +12,11 @@ using ProyectoBibliotecaVirtual.Context;
 namespace ProyectoBibliotecaVirtual.Migrations
 {
     [DbContext(typeof(BSD))]
-    partial class BSDModelSnapshot : ModelSnapshot
+    [Migration("20250826165119_InitBibliotecaVirtual6")]
+    partial class InitBibliotecaVirtual6
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -90,6 +93,16 @@ namespace ProyectoBibliotecaVirtual.Migrations
                     b.Property<int>("Año")
                         .HasColumnType("int")
                         .HasColumnName("FECHA_PUBLICACION");
+
+                    b.Property<string>("Estado")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("ESTADO_LIBRO");
+
+                    b.Property<string>("Genero")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("GENERO_LIBRO");
 
                     b.Property<string>("Titulo")
                         .IsRequired()
