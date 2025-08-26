@@ -29,5 +29,14 @@ namespace ProyectoBibliotecaVirtual.Models
         [Required]
         [Column("FECHA_PUBLICACION")]
         public int? Año { get; set; }
+
+        public void ImprimirLibro()
+        {
+            Console.WriteLine($"ID del Libro: {Id}");
+            Console.WriteLine($"Nombre del Libro: {Titulo}");
+            Console.WriteLine($"Autor del Libro: {Autor}");
+            Console.WriteLine($"Fecha de Publicación: {Año}");
+            Console.WriteLine("..............................................");
+        }
     }
 }

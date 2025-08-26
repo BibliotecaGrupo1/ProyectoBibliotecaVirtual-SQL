@@ -15,12 +15,14 @@ namespace ProyectoBibliotecaVirtual.Models
         private string nombreUsuario;
         private string correo;
         private string contraseña;
+        private List<Libro> libroUsuario;
 
         public SesionUsuario(string nombres, string apellidos, DateTime fechaNacimiento, string nombreUsuario, string correo, string contraseña) : base(nombres, apellidos, fechaNacimiento)
         {
             this.NombreUsuario = nombreUsuario;
             this.Correo = correo;
             this.Contraseña = contraseña;
+            //this.libroUsuario = new List<Libro>();
         }
 
         [Required]
@@ -39,6 +41,10 @@ namespace ProyectoBibliotecaVirtual.Models
         [Required]
         [Column("CLAVE_USUARIO")]
         public string Contraseña { get; set; }
+
+        /*[Required]
+        [Column("LIRBOS_USUARIO")]
+        public List<Libro> LibroUsuario { get; set; }*/
 
         public void ImprimirSesionUsuario()
         {
@@ -59,7 +65,20 @@ namespace ProyectoBibliotecaVirtual.Models
             Console.WriteLine($" Nombre de Usuario: {NombreUsuario}");
             Console.WriteLine($" E-Mail: {Correo}");
             Console.WriteLine($" Contraseña: {Contraseña}");
+        }
 
+        public void AñadirLibroUsuario(Libro AggLibro) // Esta funcion agrega los items de la lista Libros a una nuevalista dentro de la clase Usuario como libros leidos o en lectura para un determinado Usuario
+        {
+            if (this.libroUsuario == null)
+            {
+                this.libroUsuario = new List<Libro>();
+            }
+            this.libroUsuario.Add(AggLibro);
+        }
+
+        public void ImprimirListaLibros()
+        {
+            this.libroUsuario?.ForEach(librerias => librerias.ImprimirLibro());
         }
     }
 }

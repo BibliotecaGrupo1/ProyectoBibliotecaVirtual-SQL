@@ -1,6 +1,7 @@
 ﻿// See https://aka.ms/new-console-template for more information
 //NUEVO FORMATO DEL PROYECTO
 
+using Microsoft.Identity.Client;
 using ProyectoBibliotecaVirtual.Context;
 using ProyectoBibliotecaVirtual.Models;
 
@@ -177,7 +178,8 @@ void iniciarSesion()
                 Console.WriteLine("╔════════════════════════════════════════════╗");
                 Console.WriteLine("║                MENU DE USUARIO             ║");
                 Console.WriteLine("╚════════════════════════════════════════════╝");
-                Console.WriteLine(" 1. Agregar libro a mi lista");
+                Console.WriteLine(" 1. Buscar Libros en OpenLibrary");
+                Console.WriteLine(" 2. Agregar libros a mi lista");
                 Console.WriteLine(" 3. Listar todos mis libros");
                 Console.WriteLine(" 4. Cerrar Sesión");
                 Console.WriteLine();
@@ -188,6 +190,46 @@ void iniciarSesion()
                 {
                     case "1":
                         BuscarLibroEnOpenLibrary().GetAwaiter().GetResult();
+                        break;
+                    case "2":
+                        Console.Clear();
+                        Console.ForegroundColor = ConsoleColor.DarkCyan;
+                        Console.WriteLine("╔════════════════════════════════════════════╗");
+                        Console.WriteLine("║         AGREGAR LIBROS A MI LISTA          ║");
+                        Console.WriteLine("╚════════════════════════════════════════════╝");
+
+                        var dB = new BSD();
+                        var Books = dB.Libros.ToList();
+                        foreach (var libro in Books)
+                        {
+                            libro.ImprimirLibro();
+                        }
+                        Console.WriteLine("══════════════════════════════════════════════");
+                        Console.Write("Ingrese el ID del libro que desea agregar a su lista de libros: ");
+                        int idLibro = Convert.ToInt32(Console.ReadLine());
+                        var AggLibro = db.Libros.FirstOrDefault(l => l.Id == idLibro);
+                        if (idLibro != null)
+                        {
+                            Console.Clear();
+                            Console.WriteLine("╔════════════════════════════════════════════╗");
+                            Console.WriteLine("║         AGREGAR LIBROS A MI LISTA          ║");
+                            Console.WriteLine("╚════════════════════════════════════════════╝");
+                            AggLibro.ImprimirLibro();
+                            Console.WriteLine();
+                            Console.WriteLine("Libro añadido a la lista correctamente");
+                            User.AñadirLibroUsuario(AggLibro);
+                            Console.ReadLine();
+                        }
+                        break;
+                    case "3":
+                        Console.Clear();
+                        Console.WriteLine("╔════════════════════════════════════════════╗");
+                        Console.WriteLine("║         LISTA DE LIBROS DEL USUARIO        ║");
+                        Console.WriteLine("╚════════════════════════════════════════════╝");
+                        User.ImprimirListaLibros();
+                        Console.WriteLine();
+                        Console.WriteLine("Presione Enter para volver al menú...");
+                        Console.ReadLine();
                         break;
                     case "4": // aqui se implemente la misma logica de bucle para permanecer dentro del menu de usuario hasta que la opcion sea cerrar la sesion
                         Console.Clear();
@@ -207,6 +249,13 @@ void iniciarSesion()
             return;
         }
     }
+}
+
+void AgregarLibrosListaUsuario()
+{
+    
+
+
 }
 
 /////////////// REGISTRO DE ADMINISTRADORES ///////////////
