@@ -41,22 +41,22 @@ while (true)
     {
         case "1":
             Console.Clear();
-            crearCuenta();
+            crearCuenta(); // Registrar nuevo usuario
             break;
         case "2":
             Console.Clear();
-            iniciarSesion();
+            iniciarSesion(); // iniciar sesion con cuenta usuario
             break;
         case "3":
-            Console.WriteLine("Saliendo del sistema...");
+            Console.WriteLine("Saliendo del sistema..."); // salir del sistema
             return;
         case "0801":
             Console.Clear();
-            RegistrarAdministrador();
+            RegistrarAdministrador(); // registrar un administrador
             break;
         case "2001":
             Console.Clear();
-            IniciarSesionAdmin();
+            IniciarSesionAdmin(); // iniciar sesion con cuenta administrador
             break;
         default:
             Console.WriteLine("Opción no válida, intentar de nuevo.");
@@ -189,13 +189,13 @@ void iniciarSesion()
                 switch (opcionUsuario)
                 {
                     case "1":
-                        BuscarLibroEnOpenLibrary().GetAwaiter().GetResult();
+                        BuscarLibroEnOpenLibrary().GetAwaiter().GetResult(); // Esta es la funcion para buscar los libros desde la API
                         break;
                     case "2":
                         Console.Clear();
                         Console.ForegroundColor = ConsoleColor.DarkCyan;
                         Console.WriteLine("╔════════════════════════════════════════════╗");
-                        Console.WriteLine("║         AGREGAR LIBROS A MI LISTA          ║");
+                        Console.WriteLine("║         AGREGAR LIBROS A MI LISTA          ║"); // aqui agregamos libros que esten en la base de datos directamente a la lista personal de un usuario
                         Console.WriteLine("╚════════════════════════════════════════════╝");
 
                         var dB = new BSD();
@@ -218,13 +218,14 @@ void iniciarSesion()
                             Console.WriteLine();
                             Console.WriteLine("Libro añadido a la lista correctamente");
                             User.AñadirLibroUsuario(AggLibro);
+                            db.SaveChanges();
                             Console.ReadLine();
                         }
                         break;
                     case "3":
                         Console.Clear();
                         Console.WriteLine("╔════════════════════════════════════════════╗");
-                        Console.WriteLine("║         LISTA DE LIBROS DEL USUARIO        ║");
+                        Console.WriteLine("║         LISTA DE LIBROS DEL USUARIO        ║"); // esto imprimirá la lista de libros que tiene un usuario 
                         Console.WriteLine("╚════════════════════════════════════════════╝");
                         User.ImprimirListaLibros();
                         Console.WriteLine();
@@ -238,24 +239,22 @@ void iniciarSesion()
                         Console.ReadLine();
                         Console.Clear();
                         return;
+                    default:
+                        Console.WriteLine("Opción no válida, intentar de nuevo."); // esto imprime el mensaje de opcion no válida si la opcion elegida no es ninguna de las que imprime el menú
+                        Console.ReadLine();
+                        Console.Clear();
+                        break;
                 }
             }
         }
         else
         {
-            Console.WriteLine("Contraseña incorrecta, serás redirigido al menú.");
+            Console.WriteLine("Contraseña incorrecta, serás redirigido al menú."); // mensaje de clave incorrecta si la clave no coincide con el usuario registrado
             Console.ReadLine();
             Console.Clear();
             return;
         }
     }
-}
-
-void AgregarLibrosListaUsuario()
-{
-    
-
-
 }
 
 /////////////// REGISTRO DE ADMINISTRADORES ///////////////
@@ -326,10 +325,9 @@ void IniciarSesionAdmin()
                 Console.WriteLine("╔════════════════════════════════════════════╗╔════════════════════════════════════════════╗");
                 Console.WriteLine("║            MENU OPCIONAL DE LIBROS         ║║           MENU OPCIONAL DE USUARIOS        ║"); // Se usó este estilo compacto para mejorar el resultado visual, y no ocupar mucho espacio en la pantalla de impresión
                 Console.WriteLine("╚════════════════════════════════════════════╝╚════════════════════════════════════════════╝");
-                Console.WriteLine(" 1. Agregar Libro.                               5. Listar Usuarios.");
-                Console.WriteLine(" 2. Ver Lista de Libros.                         6. Modificar un Usuario.");
-                Console.WriteLine(" 3. Modificar Datos de Libro.                    7. Eliminar un usuario.");
-                Console.WriteLine(" 4. Eliminar Libro.");
+                Console.WriteLine(" 1. Agregar libros a la Plataforma               5. Listar Usuarios.");
+                Console.WriteLine(" 2. Ver lista de libros en la Plataforma         6. Modificar un Usuario.");
+                Console.WriteLine(" 3. Eliminar libro de la Plataforma              7. Eliminar un usuario.");
                 Console.WriteLine();
                 Console.WriteLine(" 8. Salir al Menú Principal");
                 Console.WriteLine();
@@ -341,40 +339,35 @@ void IniciarSesionAdmin()
                 {
                     case "1": // el bucle de opciones con operaciones solo disponibles para ADMINISTRADORES
                         Console.Clear();
-                        //AgregarNuevoLibro(); // Registrar un nuevo libro
+                        BuscarLibroEnOpenLibrary().GetAwaiter().GetResult(); // Buscar y agregar libros desde la API a nuestra BSD
                         Console.Clear();
                         break;
                     case "2":
                         Console.Clear();
-                        //ListaLibros(); // Lista de todos los libros
+                        ListaLibros(); // Lista de todos los libros
                         Console.Clear();
                         break;
                     case "3":
                         Console.Clear();
-                        //ModificarLibros(); // Modificar información de libros
+                        EliminarLibro(); // Eliminar un libro de la lista
                         Console.Clear();
                         break;
                     case "4":
                         Console.Clear();
-                        //EliminarLibro(); // Eliminar un libro de la lista
+                        ListaUsuarios(); // Lista de Usuarios
                         Console.Clear();
                         break;
                     case "5":
                         Console.Clear();
-                        ListaUsuarios(); // Lista de Usuarios
+                        ModificarUsuarioComoAdmin(); // Modificar Usuarios
                         Console.Clear();
                         break;
                     case "6":
                         Console.Clear();
-                        ModificarUsuarioComoAdmin(); // Modificar Usuarios
-                        Console.Clear();
-                        break;
-                    case "7":
-                        Console.Clear();
                         EliminarUsuario(); // Eliminar Usuarios
                         Console.Clear();
                         break;
-                    case "8":
+                    case "7":
                         Console.WriteLine("Saliendo del modo ADMIN...");
                         Console.ReadLine();
                         Console.Clear();
@@ -393,13 +386,86 @@ void IniciarSesionAdmin()
     }
 }
 
+/////////////// LISTA DE LIBROS EN LA BIBLIOTECA ///////////////
+void ListaLibros()
+{
+    Console.Clear();
+    Console.WriteLine("╔════════════════════════════════════════════╗");
+    Console.WriteLine("║      LISTA DE LIBROS EN LA BIBLIOTECA      ║"); // Esto imprime la lista completa de todos los libros en la biblioteca
+    Console.WriteLine("╚════════════════════════════════════════════╝");
+
+    var dB = new BSD();
+    var Books = dB.Libros.ToList();
+    foreach (var libro in Books)
+    {
+        libro.ImprimirLibro();
+    }
+    Console.ReadLine();
+}
+
+/////////////// ELIMINAR UN LIBRO DESCARGADO EN NUESTRA BSD ///////////////
+void EliminarLibro()
+{
+    Console.Clear();
+    Console.WriteLine("╔════════════════════════════════════════════╗");
+    Console.WriteLine("║      ELIMINAR LIBROS DE LA BIBLIOTECA      ║"); // Esto imprime la lista completa de todos los libros en la biblioteca
+    Console.WriteLine("╚════════════════════════════════════════════╝");
+
+    var dB = new BSD();
+    var Books = dB.Libros.ToList();
+    foreach (var libro in Books)
+    {
+        libro.ImprimirLibro();
+    }
+    Console.WriteLine("══════════════════════════════════════════════");
+    Console.WriteLine();
+    Console.Write("Escriba la ID del Libro que va a eliminar: ");
+    int BookID = Convert.ToInt32(Console.ReadLine());
+
+    var EliminarLibro = dB.Libros.FirstOrDefault(l => l.Id == BookID);
+    if (EliminarLibro != null)
+    {
+        Console.Clear();
+        Console.WriteLine("Libro seleccionado: ");
+        EliminarLibro.ImprimirLibro();
+        Console.WriteLine("══════════════════════════════════════════════");
+        Console.WriteLine();
+        Console.WriteLine("¿Está seguro que desea eliminar este Libro de la Plataforma? (S/N)");
+        string confirmacion = Console.ReadLine();
+
+        if (confirmacion?.ToUpper() == "S")
+        {
+            dB.Libros.Remove(EliminarLibro);
+            dB.SaveChanges();
+            Console.WriteLine("El Libro ha sido eliminado correctamente.");
+            Console.ReadLine();
+            Console.Clear();
+        }
+        else
+        {
+            Console.Clear();
+            Console.WriteLine("Operación cancelada.");
+            Console.WriteLine("Volviendo al menu ADMINISTRADOR...");
+            Console.ReadLine();
+            Console.Clear();
+        }
+    }
+    else
+    {
+        Console.Clear();
+        Console.WriteLine("No se encontró el Libro seleccionado.");
+        Console.WriteLine("Volviendo al menu ADMINISTRADOR...");
+        Console.ReadLine();
+        Console.Clear();
+    }
+}
 
 /////////////// LISTA DE USUARIOS PARA ADMINISTRADOR ///////////////
 void ListaUsuarios()
 {
     Console.Clear();
     Console.WriteLine("╔════════════════════════════════════════════╗");
-    Console.WriteLine("║     LISTA DE USUARIOS EN LA BIBLIOTECA     ║"); // Esto imprime la lista completa de todos los libros en la biblioteca
+    Console.WriteLine("║     LISTA DE USUARIOS EN LA BIBLIOTECA     ║"); // Esto imprime la lista completa de todos los usuarios en la biblioteca
     Console.WriteLine("╚════════════════════════════════════════════╝");
 
     var db = new BSD();
